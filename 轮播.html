@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 500px;
+            height: 200px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 100px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen li {
+            width: 500px;
+            height: 200px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: block;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            text-align: center;
+            font:700 40px/40px "黑体";
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="all" id='box'>
+    <div class="screen">
+        <ul>
+            <li><img src="img/1.jpg" width="500" height="200"/></li>
+            <li><img src="img/2.jpg" width="500" height="200"/></li>
+            <li><img src="img/3.jpg" width="500" height="200"/></li>
+            <li><img src="img/4.jpg" width="500" height="200"/></li>
+            <li><img src="img/5.jpg" width="500" height="200"/></li>
+            <li><img src="img/1.jpg" width="500" height="200"/></li>
+        </ul>
+        <ol>
+            <li class="current">1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ol>
+    </div>
+    <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+</div>
+<script src="jquery-1.12.2.js"></script>
+<script >
+    $(function(){
+        var num = 0;
+        $('ol li').mouseover(function(){
+            $(this).addClass("current").siblings().removeClass("current");
+            var i = $(this).index();
+            console.log(i);
+            $("ul").stop().animate({left:-i*500},500);
+            num = i;
+        });
+        var timer = null;
+        function prevPlay(){
+            num--;
+            if(num<0){
+               $("ul").css({left:-500*5}).stop().animate({left:-500*(5-1)},500);
+                num=4;
+            }else{
+                $("ul").stop().animate({left:-num*500},500);
+            }
+            if(num==4){
+                $("ol li").eq(4).addClass("current").siblings().removeClass("current");
+            }else{
+                $("ol li").eq(num).addClass("current").siblings().removeClass("current");
+
+            }
+        }
+        function nextPlay(){
+            num++;
+            if(num>5){
+                $("ul").css({left:0}).stop().animate({left:-500},500);
+                num=1;
+            }else{
+                $("ul").stop().animate({left:-num*500},500);
+            }
+            if(num==5){
+                $("ol li").eq(0).addClass("current").siblings().removeClass("current");
+            }else{
+                $("ol li").eq(num).addClass("current").siblings().removeClass("current");
+
+            }
+        }
+        timer = setInterval(nextPlay,2000);
+        $(".screen").mouseenter(function(){
+            clearInterval(timer);
+        }).mouseleave(function(){
+            timer = setInterval(nextPlay,2000);
+        });
+        $("#right").mouseenter(function(){
+            clearInterval(timer);
+        }).mouseleave(function(){
+            timer = setInterval(nextPlay,2000);
+        }).click(function(){
+            nextPlay();
+        });
+        $("#left").mouseenter(function(){
+            clearInterval(timer);
+        }).mouseleave(function(){
+            timer = setInterval(nextPlay,2000);
+        }).click(function(){
+            prevPlay();
+        });
+    });
+</script>
+</body>
+</html>
